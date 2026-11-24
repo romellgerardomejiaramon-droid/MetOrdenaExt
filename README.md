@@ -585,3 +585,167 @@ Donde n es la cantidad de datos. En la mezcla equilibrada, mientras más vías y
 - Como los programas muestran **cada comparación**, con listas muy largas la salida es extensa. Para clase conviene usar de 8 a 15 elementos.
 - Cuando dos datos son iguales, sale primero el de la lista A (o del tramo izquierdo). Así el orden es estable.
 - Los programas fueron probados con ejemplos y con cientos de listas aleatorias para comprobar que el resultado siempre queda bien ordenado.
+
+---
+
+## 9. Programa gráfico de los tres métodos (Tkinter)
+
+Además de los programas que funcionan desde la terminal, el proyecto incluye un programa con **interfaz gráfica desarrollado en Python con Tkinter**, que reúne los tres métodos de ordenamiento externo en una sola aplicación:
+
+1. Intercalación.
+2. Mezcla Directa.
+3. Mezcla Equilibrada.
+
+El programa permite seleccionar el método que se desea utilizar, resolver ejercicios de ejemplo o ingresar datos propios. A diferencia de los programas de terminal, toda la interacción se realiza mediante ventanas, botones, campos de texto y áreas donde se muestra el procedimiento.
+
+### 9.1 Funcionamiento interno
+
+El programa está organizado mediante la clase `AplicacionOrdenamiento`, que contiene las funciones necesarias para crear la interfaz, recibir los datos, aplicar los métodos de ordenamiento y mostrar los resultados.
+
+| Función | Qué hace |
+|---------|----------|
+| `__init__()` | Inicializa la aplicación, configura la ventana principal y prepara la interfaz. |
+| `crear_encabezado()` | Construye el encabezado visual de la aplicación. |
+| `limpiar_pantalla()` | Limpia el contenido anterior para mostrar una nueva pantalla. |
+| `crear_titulo()` | Coloca los títulos correspondientes a cada sección. |
+| `crear_boton()` | Crea los botones que permiten navegar y ejecutar las opciones. |
+| `mostrar_menu_principal()` | Presenta los tres métodos de ordenamiento y la opción para salir. |
+| `mostrar_menu_metodo()` | Muestra las opciones correspondientes al método seleccionado. |
+| `mostrar_entrada_datos()` | Presenta la pantalla donde el usuario indica cuántas listas desea ingresar. |
+| `crear_campos_listas()` | Genera dinámicamente los campos de texto según la cantidad de listas indicada. |
+| `clave_texto()` | Prepara los textos para compararlos alfabéticamente, sin distinguir mayúsculas ni acentos. |
+| `convertir_tiempo()` | Convierte los tiempos a segundos para poder compararlos correctamente. |
+| `convertir_valor()` | Identifica y convierte los datos al tipo correspondiente para ordenarlos. |
+| `interpretar_datos()` | Separa y analiza los valores ingresados por el usuario. |
+| `mostrar_lista()` | Da formato a las listas para presentarlas en pantalla. |
+| `mezclar()` | Combina dos secuencias ordenadas mediante comparaciones entre sus elementos. |
+| `ordenar_previo()` | Ordena previamente los datos cuando es necesario para preparar las secuencias. |
+| `intercalacion()` | Aplica el método de intercalación y muestra cómo se combinan las listas. |
+| `mezcla_directa()` | Divide los datos en bloques, los distribuye y los mezcla en pasadas sucesivas. |
+| `mezcla_equilibrada()` | Distribuye las corridas entre archivos auxiliares simulados y realiza las mezclas hasta obtener una secuencia ordenada. |
+| `resolver_ejemplo()` | Ejecuta el ejercicio de ejemplo seleccionado para el método correspondiente. |
+| `resolver_datos()` | Recibe los datos propios del usuario y ejecuta el método seleccionado. |
+| `mostrar_resultado()` | Presenta el procedimiento realizado y el resultado final. |
+| `escribir()` | Muestra la información del procedimiento en el área de resultados. |
+| `salir()` | Cierra la aplicación. |
+
+**Captura y procesamiento de datos**
+
+El usuario puede trabajar con diferentes tipos de información:
+
+- Números enteros.
+- Números decimales.
+- Palabras y nombres.
+- Tiempos en formato `mm:ss` o `hh:mm:ss`.
+- Datos con nombre y valor, por ejemplo: `Ana=15, Luis=8`.
+
+El programa identifica el tipo de información ingresada y utiliza el valor correspondiente para realizar las comparaciones. En el caso de los tiempos, los convierte a segundos; cuando se utilizan nombres con valores, conserva el nombre y ordena de acuerdo con el valor numérico o temporal.
+
+Las listas deben contener un mismo tipo de dato y los datos de las diferentes listas también deben ser compatibles entre sí. Para separar los elementos se pueden utilizar comas, punto y coma o saltos de línea. Los números decimales se escriben utilizando punto.
+
+**Aplicación de los métodos**
+
+- **Intercalación:** recibe las listas ingresadas, las prepara para que estén ordenadas y después combina sus elementos comparando los valores correspondientes hasta formar una sola lista ordenada.
+- **Mezcla Directa:** reúne los datos ingresados en una secuencia, forma bloques de tamaño progresivo y realiza las mezclas necesarias hasta ordenar todos los elementos.
+- **Mezcla Equilibrada:** trabaja con corridas ordenadas que se distribuyen alternadamente entre F1 y F2. Después combina las corridas y coloca los resultados en F3 y F4. Este proceso se repite en diferentes pasadas hasta obtener una sola corrida ordenada.
+
+En esta versión gráfica, los archivos auxiliares se representan mediante listas de Python para mostrar visualmente el procedimiento, sin crear archivos físicos en la computadora.
+
+### 9.2 Funcionamiento externo (interfaz gráfica)
+
+Al ejecutar el programa aparece una ventana principal con el nombre del proyecto y un menú para seleccionar el método de ordenamiento.
+
+**Menú principal**
+
+El usuario puede elegir entre las siguientes opciones:
+
+| Opción | Qué pasa |
+|--------|----------|
+| Intercalación | Abre el menú de ejercicios de intercalación. |
+| Mezcla Directa | Abre el menú de ejercicios de mezcla directa. |
+| Mezcla Equilibrada | Abre el menú de ejercicios de mezcla equilibrada. |
+| Salir del programa | Cierra la aplicación. |
+
+**Menú de cada método**
+
+Después de seleccionar un método, aparece un segundo menú con las opciones disponibles:
+
+| Opción | Qué pasa |
+|--------|----------|
+| Ejemplo 1 | Ejecuta el primer ejercicio ya preparado. |
+| Ejemplo 2 | Ejecuta el segundo ejercicio ya preparado. |
+| Ejemplo 3 | Ejecuta el tercer ejercicio ya preparado. |
+| Resolver mi propio ejercicio | Permite ingresar los datos que se desean ordenar. |
+| Regresar al menú principal | Vuelve a la pantalla donde se selecciona el método. |
+| Salir del programa | Cierra la aplicación. |
+
+**Resolución de un ejercicio propio**
+
+Cuando el usuario selecciona la opción para resolver su propio ejercicio, el programa solicita primero la cantidad de listas que desea ingresar. Después genera automáticamente los campos necesarios para capturar cada lista.
+
+Por ejemplo, si el usuario indica que utilizará tres listas, aparecen tres campos de entrada:
+
+```text
+Cantidad de listas: 3
+
+Lista 1: 23, 15, 8
+Lista 2: 42, 31, 19
+Lista 3: 56, 12, 35
+```
+
+Una vez ingresados los datos, el usuario puede ejecutar el método seleccionado. El programa procesa las listas y presenta el procedimiento paso a paso.
+
+**Visualización de resultados**
+
+La pantalla de resultados muestra la información del ejercicio realizado, incluyendo:
+
+- Cantidad de listas ingresadas.
+- Contenido de cada lista.
+- Datos que se utilizarán para aplicar el método.
+- Distribución de bloques o corridas, cuando corresponde.
+- Comparaciones realizadas durante las mezclas.
+- Pasadas del método.
+- Resultado final ordenado.
+
+El área de resultados permite consultar el procedimiento completo, incluso cuando ocupa más espacio que el disponible inicialmente en la ventana.
+
+**Regreso y salida**
+
+Después de resolver un ejemplo o un ejercicio propio, el usuario puede elegir entre dos opciones:
+
+1. **Regresar al menú principal:** vuelve a la pantalla inicial para seleccionar otro método.
+2. **Salir del programa:** cierra la aplicación.
+
+De esta manera, el usuario puede resolver diferentes ejercicios sin tener que cerrar y ejecutar nuevamente el programa.
+
+### 9.3 Diferencias entre la versión de terminal y la versión gráfica
+
+| Característica | Programas de terminal | Programa gráfico |
+|----------------|-----------------------|------------------|
+| Interfaz | Texto en consola. | Ventanas con Tkinter. |
+| Selección de métodos | Mediante números escritos. | Mediante botones. |
+| Captura de datos | Mediante la terminal. | Mediante campos de entrada. |
+| Cantidad de listas | Depende de cada programa. | El usuario indica cuántas listas necesita. |
+| Ejercicios | Ejemplos definidos en cada archivo. | Tres ejemplos seleccionables por método. |
+| Procedimiento | Se imprime en la terminal. | Se muestra en un área de resultados. |
+| Tipos de datos | Dependen de cada ejercicio. | Enteros, decimales, palabras, tiempos y datos con nombre y valor. |
+| Navegación | Menús escritos. | Botones para regresar o salir. |
+
+### 9.4 Ejecución del programa gráfico
+
+Para ejecutar la aplicación se necesita Python 3.8 o superior. Tkinter forma parte de la instalación estándar de Python en la mayoría de las instalaciones de escritorio.
+
+Abre una terminal en la carpeta donde se encuentra el archivo del programa y ejecuta:
+
+```bash
+python nombre_del_programa.py
+```
+
+En caso de que el sistema utilice el comando `python3`, se puede ejecutar de la siguiente manera:
+
+```bash
+python3 nombre_del_programa.py
+```
+
+Una vez iniciado, se abrirá la ventana principal y se podrá comenzar a utilizar la aplicación.
+
