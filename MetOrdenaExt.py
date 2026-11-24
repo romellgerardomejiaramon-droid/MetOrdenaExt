@@ -19,8 +19,9 @@ class AplicacionOrdenamiento:
             pass
 
         self.ventana.configure(bg="#eef2f7")
-
         self.metodo = ""
+        self.entradas_listas = []
+
         self.ejemplos = {
             "Intercalacion": [
                 {
@@ -86,8 +87,6 @@ class AplicacionOrdenamiento:
                 }
             ]
         }
-
-        self.entradas_listas = []
 
         self.crear_encabezado()
 
@@ -341,7 +340,7 @@ class AplicacionOrdenamiento:
         )
 
     # --------------------------------------------------
-    # PREGUNTAR CUANTAS LISTAS DESEA UTILIZAR
+    # INGRESAR DATOS
     # --------------------------------------------------
 
     def mostrar_entrada_datos(self):
@@ -440,9 +439,7 @@ class AplicacionOrdenamiento:
 
         try:
 
-            cantidad = int(
-                self.cantidad_listas.get()
-            )
+            cantidad = int(self.cantidad_listas.get())
 
             if cantidad < 1:
                 raise ValueError
@@ -761,7 +758,7 @@ class AplicacionOrdenamiento:
         ) + "]"
 
     # --------------------------------------------------
-    # MEZCLA DE DOS LISTAS
+    # MEZCLA DE DOS LISTAS CON COMPARACIONES
     # --------------------------------------------------
 
     def mezclar(self, izquierda, derecha, mostrar=False):
@@ -769,55 +766,142 @@ class AplicacionOrdenamiento:
         resultado = []
         i = 0
         j = 0
+        comparacion = 1
 
         if mostrar:
 
-            self.escribir("Comparando:")
-            self.escribir(
-                self.mostrar_lista(izquierda) +
-                " con " +
-                self.mostrar_lista(derecha)
-            )
+            self.escribir("Se van a mezclar estas dos sublistas:")
+            self.escribir("Izquierda: " + self.mostrar_lista(izquierda))
+            self.escribir("Derecha:   " + self.mostrar_lista(derecha))
+            self.escribir("")
 
         while i < len(izquierda) and j < len(derecha):
 
-            if izquierda[i]["clave"] <= derecha[j]["clave"]:
+            valor_izquierdo = izquierda[i]
+            valor_derecho = derecha[j]
 
-                resultado.append(izquierda[i])
+            if mostrar:
+                self.escribir(
+                    "Comparacion " + str(comparacion) + ": " +
+                    valor_izquierdo["etiqueta"] + " contra " +
+                    valor_derecho["etiqueta"]
+                )
+
+            if valor_izquierdo["clave"] <= valor_derecho["clave"]:
+
+                resultado.append(valor_izquierdo)
                 i += 1
+
+                if mostrar:
+                    self.escribir(
+                        "Se coloca " + valor_izquierdo["etiqueta"] +
+                        " porque es menor o igual."
+                    )
 
             else:
 
-                resultado.append(derecha[j])
+                resultado.append(valor_derecho)
                 j += 1
 
-        resultado.extend(izquierda[i:])
-        resultado.extend(derecha[j:])
+                if mostrar:
+                    self.escribir(
+                        "Se coloca " + valor_derecho["etiqueta"] +
+                        " porque es menor."
+                    )
+
+            if mostrar:
+                self.escribir(
+                    "Resultado parcial: " + self.mostrar_lista(resultado)
+                )
+                self.escribir("")
+
+            comparacion += 1
+
+        if i < len(izquierda):
+
+            sobrantes = izquierda[i:]
+            resultado.extend(sobrantes)
+
+            if mostrar:
+                self.escribir(
+                    "Se agregan los elementos restantes de la izquierda: " +
+                    self.mostrar_lista(sobrantes)
+                )
+
+        if j < len(derecha):
+
+            sobrantes = derecha[j:]
+            resultado.extend(sobrantes)
+
+            if mostrar:
+                self.escribir(
+                    "Se agregan los elementos restantes de la derecha: " +
+                    self.mostrar_lista(sobrantes)
+                )
 
         if mostrar:
 
-            self.escribir("Resultado de la mezcla:")
+            self.escribir("Sublista ordenada despues de mezclar:")
             self.escribir(self.mostrar_lista(resultado))
+            self.escribir("-" * 65)
             self.escribir("")
 
         return resultado
 
-    def ordenar_previo(self, lista):
+    # --------------------------------------------------
+    # DIVISION RECURSIVA PARA INTERCALACION
+    # --------------------------------------------------
+
+    def ordenar_previo(self, lista, mostrar=False, nivel=1):
 
         if len(lista) <= 1:
+
+            if mostrar:
+                self.escribir(
+                    "La sublista " + self.mostrar_lista(lista) +
+                    " tiene un solo elemento; ya esta ordenada."
+                )
+
             return lista[:]
 
         mitad = len(lista) // 2
+        izquierda_original = lista[:mitad]
+        derecha_original = lista[mitad:]
+
+        if mostrar:
+
+            self.escribir(
+                "Division nivel " + str(nivel) + ": " +
+                self.mostrar_lista(lista)
+            )
+
+            self.escribir(
+                "  Mitad izquierda: " +
+                self.mostrar_lista(izquierda_original)
+            )
+
+            self.escribir(
+                "  Mitad derecha:   " +
+                self.mostrar_lista(derecha_original)
+            )
+
+            self.escribir("")
 
         izquierda = self.ordenar_previo(
-            lista[:mitad]
+            izquierda_original, mostrar, nivel + 1
         )
 
         derecha = self.ordenar_previo(
-            lista[mitad:]
+            derecha_original, mostrar, nivel + 1
         )
 
-        return self.mezclar(izquierda, derecha)
+        if mostrar:
+            self.escribir(
+                "Ahora se mezclan las mitades ordenadas del nivel " +
+                str(nivel) + "."
+            )
+
+        return self.mezclar(izquierda, derecha, mostrar)
 
     # --------------------------------------------------
     # INTERCALACION DE VARIAS LISTAS
@@ -837,7 +921,18 @@ class AplicacionOrdenamiento:
                 self.mostrar_lista(lista)
             )
 
-            ordenada = self.ordenar_previo(lista)
+            self.escribir(
+                "PASO DE ORDENAMIENTO DE LA LISTA " + str(i) + ":"
+            )
+
+            self.escribir(
+                "Se divide la lista en mitades hasta obtener "
+                "sublistas individuales."
+            )
+
+            self.escribir("")
+
+            ordenada = self.ordenar_previo(lista, mostrar=True)
             listas_ordenadas.append(ordenada)
 
             self.escribir(
@@ -876,6 +971,14 @@ class AplicacionOrdenamiento:
 
         self.escribir("METODO DE MEZCLA DIRECTA")
         self.escribir("=" * 65)
+
+        self.escribir(
+            "La mezcla directa comienza con bloques de un elemento. "
+            "En cada pasada duplica el tamano de los bloques y mezcla "
+            "cada par de bloques vecinos."
+        )
+
+        self.escribir("")
 
         actual = lista[:]
         cantidad = len(actual)
@@ -940,6 +1043,14 @@ class AplicacionOrdenamiento:
 
         self.escribir("METODO DE MEZCLA EQUILIBRADA")
         self.escribir("=" * 65)
+
+        self.escribir(
+            "La mezcla equilibrada inicia con corridas de un elemento. "
+            "Las distribuye en dos grupos y despues combina las corridas "
+            "por pares hasta obtener una sola lista ordenada."
+        )
+
+        self.escribir("")
 
         actual = [
             [elemento]
@@ -1067,6 +1178,7 @@ class AplicacionOrdenamiento:
 
                 listas.append(lista)
 
+            self.nombre_ejercicio = ejemplo["nombre"]
             self.mostrar_resultado(listas)
 
         except Exception as error:
@@ -1107,6 +1219,7 @@ class AplicacionOrdenamiento:
 
                 listas.append(lista)
 
+            self.nombre_ejercicio = "Ejercicio creado por el usuario"
             self.mostrar_resultado(listas)
 
         except Exception as error:
@@ -1126,7 +1239,7 @@ class AplicacionOrdenamiento:
 
         self.crear_titulo(
             "RESOLUCION DEL EJERCICIO",
-            "Procedimiento paso a paso y resultado final."
+            "Procedimiento detallado, comparaciones y resultado final."
         )
 
         marco = tk.Frame(
@@ -1163,11 +1276,44 @@ class AplicacionOrdenamiento:
         )
 
         barra.pack(side="right", fill="y")
+
         self.resultado.pack(
             side="left",
             fill="both",
             expand=True
         )
+
+        self.escribir("DATOS DE ENTRADA")
+        self.escribir("=" * 65)
+
+        for numero, lista in enumerate(listas, start=1):
+
+            self.escribir(
+                "Lista " + str(numero) + ": " +
+                self.mostrar_lista(lista)
+            )
+
+        self.escribir("")
+        self.escribir("CRITERIO DE ORDENAMIENTO")
+
+        self.escribir(
+            "Los datos se ordenan de menor a mayor. "
+            "En palabras se usa el orden alfabetico; "
+            "en tiempos se comparan sus segundos."
+        )
+
+        self.escribir("")
+
+        self.escribir(
+            "EJERCICIO: " + getattr(
+                self,
+                "nombre_ejercicio",
+                "Ejercicio ingresado"
+            )
+        )
+
+        self.escribir("METODO: " + self.metodo)
+        self.escribir("")
 
         if self.metodo == "Intercalacion":
 
@@ -1191,13 +1337,16 @@ class AplicacionOrdenamiento:
                 lista_unica.extend(lista)
 
             self.escribir("")
+
             self.escribir(
                 "Se combinan las listas para aplicar el metodo."
             )
+
             self.escribir(
                 "Lista que sera ordenada: " +
                 self.mostrar_lista(lista_unica)
             )
+
             self.escribir("")
 
             if self.metodo == "Mezcla Directa":
@@ -1207,6 +1356,16 @@ class AplicacionOrdenamiento:
             elif self.metodo == "Mezcla Equilibrada":
 
                 self.mezcla_equilibrada(lista_unica)
+
+        self.escribir("")
+        self.escribir("=" * 65)
+        self.escribir("FIN DE LA RESOLUCION")
+
+        self.escribir(
+            "El resultado final aparece arriba. Cada comparacion muestra "
+            "que elementos se evaluaron, cual se eligio y como fue creciendo "
+            "la lista ordenada."
+        )
 
         botones = tk.Frame(
             self.contenedor,
